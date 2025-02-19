@@ -1,0 +1,90 @@
+services:
+  mysql:
+    container_name: ebank-database
+    image: mysql:8.3.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ebank
+    ports:
+      - "3306:3306"
+    volumes:
+      - ebank-mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=caching_sha2_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      ebank-network:
+
+  user-service:
+    container_name: ebank-user-services
+    build: 
+      context: ./ebank-user-services
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://ebank-database:3306/ebank-user-services-db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=ebank-user-services
+      - SPRING_DATASOURCE_PASSWORD=y6qL75Nn73Dp9NgE5HPSrbbiojiiMBhNYRneqAa7
+      - LOGGING_FILE_PATH=/app/logs
+    volumes:
+      - ebank-logs-data:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      ebank-network:
+
+  transaction-service:
+    container_name: ebank-transaction-services
+    build: 
+      context: ./ebank-transaction-services
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://ebank-database:3306/ebank-transaction-services-db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=ebank-transaction-services
+      - SPRING_DATASOURCE_PASSWORD=y6qL75Nn73Dp9NgE5HPSrbbiojiiMBhNYRneqAa7
+      - LOGGING_FILE_PATH=/app/logs
+    volumes:
+      - ebank-logs-data:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rate-service:
+        condition: service_started
+    networks:
+      ebank-network:        
+
+  rate-service:
+    container_name: ebank-rate-services
+    build: 
+      context: ./ebank-rate-services
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://ebank-database:3306/ebank-rate-services-db?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=ebank-rate-services
+      - SPRING_DATASOURCE_PASSWORD=y6qL75Nn73Dp9NgE5HPSrbbiojiiMBhNYRneqAa7
+      - LOGGING_FILE_PATH=/app/logs
+    volumes:
+      - ebank-logs-data:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      ebank-network:
+
+volumes:
+  ebank-mysql-data:
+    name: ebank-database-data
+  ebank-logs-data:
+    name: ebank-logs-data
+
+networks:
+  ebank-network:
+    name: ebank-network
+    driver: bridge 
