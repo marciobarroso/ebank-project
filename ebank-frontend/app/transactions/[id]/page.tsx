@@ -4,18 +4,13 @@ import { useState } from 'react'
 
 import { useParams, useRouter } from 'next/navigation'
 
+import { format } from 'date-fns'
 import { ArrowLeft } from 'lucide-react'
 
 import { Button } from '@/app/components/ui/button'
 import { FooterActions } from '@/app/components/ui/footer-actions'
 import { Input } from '@/app/components/ui/input'
-
-import { useTransaction } from '@/app/hooks/useTransactions'
-
 import { PageContainer } from '@/app/components/ui/page-container'
-import { useAppContext } from '@/app/contexts/AppContext'
-import { format } from 'date-fns'
-
 import {
   Table,
   TableBody,
@@ -24,6 +19,10 @@ import {
   TableHeader,
   TableRow
 } from '@/app/components/ui/table'
+
+import { useTransaction } from '@/app/hooks/useTransactions'
+
+import { useAppContext } from '@/app/contexts/AppContext'
 
 interface FeeDetail {
   description: string
@@ -48,12 +47,14 @@ export default function TransactionViewPage() {
       // Assuming the metadata is an array of fee calculations
       return parsed.appliedRates.map((fee: any) => ({
         description: fee.description || '',
-        rate: typeof fee.rate === 'number'
-          ? `${(fee.rate * 100).toFixed(2)}%`
-          : fee.rate || '',
-        calculatedAmount: typeof fee.calculatedAmount === 'number'
-          ? `$${fee.calculatedAmount.toFixed(2)}`
-          : fee.calculatedAmount || ''
+        rate:
+          typeof fee.rate === 'number'
+            ? `${(fee.rate * 100).toFixed(2)}%`
+            : fee.rate || '',
+        calculatedAmount:
+          typeof fee.calculatedAmount === 'number'
+            ? `$${fee.calculatedAmount.toFixed(2)}`
+            : fee.calculatedAmount || ''
       }))
     } catch (e) {
       return []
@@ -63,6 +64,18 @@ export default function TransactionViewPage() {
   const transactionDetailsTab = (
     <>
       <div className='space-y-6'>
+        <div className='space-y-2'>
+          <label htmlFor='id' className='text-sm font-medium text-gray-700'>
+            ID
+          </label>
+          <Input
+            id='id'
+            value={transaction.id}
+            disabled
+            className='bg-gray-50'
+          />
+        </div>
+
         <div className='space-y-2'>
           <label htmlFor='type' className='text-sm font-medium text-gray-700'>
             Type
@@ -92,47 +105,53 @@ export default function TransactionViewPage() {
           />
         </div>
 
-        {transaction.status === 'PROCESSED' &&
-          (
-            <div className='space-y-2'>
-              <label htmlFor='calculatedFee' className='text-sm font-medium text-gray-700'>
-                Fees Applied
-              </label>
-              <Input
-                id='calculatedFee'
-                type='number'
-                step='0.01'
-                min='0.01'
-                max='999999999.99'
-                placeholder='0.00'
-                value={transaction.calculatedFee?.toFixed(2)}
-                disabled
-                className='bg-gray-50'
-              />
-            </div>
-          )
-        }
+        {transaction.status === 'PROCESSED' && (
+          <div className='space-y-2'>
+            <label
+              htmlFor='calculatedFee'
+              className='text-sm font-medium text-gray-700'
+            >
+              Fees Applied
+            </label>
+            <Input
+              id='calculatedFee'
+              type='number'
+              step='0.01'
+              min='0.01'
+              max='999999999.99'
+              placeholder='0.00'
+              value={transaction.calculatedFee?.toFixed(2)}
+              disabled
+              className='bg-gray-50'
+            />
+          </div>
+        )}
 
-        {transaction.status === 'PROCESSED' &&
-          (
-            <div className='space-y-2'>
-              <label htmlFor='finalAmount' className='text-sm font-medium text-gray-700'>
-                Final Amount
-              </label>
-              <Input
-                id='finalAmount'
-                type='number'
-                step='0.01'
-                min='0.01'
-                max='999999999.99'
-                placeholder='0.00'
-                value={transaction.calculatedFee ? (transaction.amount + transaction.calculatedFee).toFixed(2) : transaction.amount?.toFixed(2)}
-                disabled
-                className='bg-gray-50'
-              />
-            </div>
-          )
-        }
+        {transaction.status === 'PROCESSED' && (
+          <div className='space-y-2'>
+            <label
+              htmlFor='finalAmount'
+              className='text-sm font-medium text-gray-700'
+            >
+              Final Amount
+            </label>
+            <Input
+              id='finalAmount'
+              type='number'
+              step='0.01'
+              min='0.01'
+              max='999999999.99'
+              placeholder='0.00'
+              value={
+                transaction.calculatedFee
+                  ? (transaction.amount + transaction.calculatedFee).toFixed(2)
+                  : transaction.amount?.toFixed(2)
+              }
+              disabled
+              className='bg-gray-50'
+            />
+          </div>
+        )}
 
         <div className='space-y-2'>
           <label htmlFor='status' className='text-sm font-medium text-gray-700'>
@@ -156,9 +175,7 @@ export default function TransactionViewPage() {
           <Input
             id='createdAt'
             value={format(
-              new Date(
-                transaction?.createdAt ?? new Date()
-              ),
+              new Date(transaction?.createdAt ?? new Date()),
               'dd/MM/yyyy HH:mm:ss'
             )}
             disabled
@@ -190,27 +207,33 @@ export default function TransactionViewPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {formatMetadata(transaction.feeCalculationMetadata).length > 0 ? (
-                    formatMetadata(transaction.feeCalculationMetadata).map((fee, index) => (
-                      <TableRow key={index}>
-                        <TableCell className='py-3 font-medium text-gray-900'>
-                          {fee.description}
-                        </TableCell>
-                        <TableCell className='py-3 text-gray-600'>
-                          {fee.rate}
-                        </TableCell>
-                        <TableCell className='py-3 text-gray-600'>
-                          {fee.calculatedAmount}
+                  {formatMetadata(transaction.feeCalculationMetadata).length >
+                  0 ? (
+                      formatMetadata(transaction.feeCalculationMetadata).map(
+                        (fee, index) => (
+                          <TableRow key={index}>
+                            <TableCell className='py-3 font-medium text-gray-900'>
+                              {fee.description}
+                            </TableCell>
+                            <TableCell className='py-3 text-gray-600'>
+                              {fee.rate}
+                            </TableCell>
+                            <TableCell className='py-3 text-gray-600'>
+                              {fee.calculatedAmount}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={3}
+                          className='py-3 text-center text-gray-600'
+                        >
+                        No fees were applied to this transaction
                         </TableCell>
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={3} className='py-3 text-center text-gray-600'>
-                        No fees were applied to this transaction
-                      </TableCell>
-                    </TableRow>
-                  )}
+                    )}
                 </TableBody>
               </Table>
             </div>
@@ -228,9 +251,7 @@ export default function TransactionViewPage() {
             <Input
               id='feeCalculatedAt'
               value={format(
-                new Date(
-                  transaction?.feeCalculatedAt ?? new Date()
-                ),
+                new Date(transaction?.feeCalculatedAt ?? new Date()),
                 'dd/MM/yyyy HH:mm:ss'
               )}
               disabled
@@ -238,7 +259,6 @@ export default function TransactionViewPage() {
             />
           </div>
         )}
-
       </div>
       <FooterActions>
         <Button
@@ -255,7 +275,8 @@ export default function TransactionViewPage() {
   return (
     <PageContainer
       title='Transaction'
-      description='View and manage your transaction details and notes'>
+      description='View and manage your transaction details and notes'
+    >
       {transactionDetailsTab}
     </PageContainer>
   )

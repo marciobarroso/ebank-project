@@ -3,9 +3,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Search, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { Button } from '@/app/components/ui/button'
+import { Input } from '@/app/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -14,47 +14,60 @@ import {
   SelectValue
 } from '@/app/components/ui/select'
 
+import { RateSearchSchema, RateSearchValues } from '@/app/types/rate.type'
 import { TransactionType } from '@/app/types/transaction.types'
 
-const searchSchema = z.object({
-  type: z.string().optional()
-})
-
-type SearchValues = z.infer<typeof searchSchema>
-
 interface SearchFormProps {
-  onSearch: (values: SearchValues) => void
+  onSearch: (values: RateSearchValues) => void
 }
 
 export function SearchForm({ onSearch }: SearchFormProps) {
-  const form = useForm<SearchValues>({
-    resolver: zodResolver(searchSchema),
-    defaultValues: {
-      type: ''
-    }
+  const form = useForm<RateSearchValues>({
+    resolver: zodResolver(RateSearchSchema)
   })
 
-  const onSubmit = (values: SearchValues) => {
+  const onSubmit = (values: RateSearchValues) => {
     onSearch(values)
   }
 
-  const clearSearch = () => {
+  const handleClear = () => {
     form.reset()
-    onSearch({ type: '' })
+    onSearch({})
   }
 
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className='flex w-full items-center space-x-2'
+      className='flex items-center gap-2'
     >
       <div className='relative flex-1'>
+        <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
+        <Input
+          placeholder='Search rates...'
+          {...form.register('description')}
+          className='pl-8'
+        />
+        {form.watch('description') && (
+          <Button
+            type='button'
+            variant='ghost'
+            size='icon'
+            className='absolute right-0 top-0'
+            onClick={handleClear}
+          >
+            <X className='h-4 w-4' />
+          </Button>
+        )}
+      </div>
+      <div className='relative flex-1'>
         <Select
-          onValueChange={value => form.setValue('type', value)}
+          onValueChange={value =>
+            form.setValue('type', value as TransactionType)
+          }
           value={form.watch('type') || ''}
         >
           <SelectTrigger className='w-full'>
-            <SelectValue placeholder='Filter by transaction type...' />
+            <SelectValue placeholder='Filter by type...' />
           </SelectTrigger>
           <SelectContent>
             {Object.values(TransactionType).map(type => (
@@ -67,16 +80,14 @@ export function SearchForm({ onSearch }: SearchFormProps) {
         {form.watch('type') && (
           <button
             type='button'
-            onClick={clearSearch}
+            onClick={handleClear}
             className='absolute right-8 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700'
           >
             <X className='h-4 w-4' />
           </button>
         )}
       </div>
-      <Button type='submit' size='icon'>
-        <Search className='h-4 w-4' />
-      </Button>
+      <Button type='submit'>Search</Button>
     </form>
   )
 }

@@ -40,8 +40,6 @@ export function useTransaction(id?: number) {
   const getTransactions = useCallback(
     async (type?: string, pageNumber: number = 1) => {
       try {
-        console.log('getTransactions', type, pageNumber)
-
         setIsLoading(true)
         const searchParams = new URLSearchParams()
         if (type) {
@@ -72,7 +70,6 @@ export function useTransaction(id?: number) {
         '/api/v1/transactions',
         values
       )
-      console.log('Transaction created successfully', response.data)
       toast.success('Transaction created successfully')
       return response.data
     } catch (error) {

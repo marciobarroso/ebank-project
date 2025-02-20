@@ -13,23 +13,16 @@ import {
   TableRow
 } from '@/app/components/ui/table'
 
-import { useAppContext } from '@/app/contexts/AppContext'
-
 import { DataGridProps } from '@/app/types/data-grid.types'
-import { Transaction } from '@/app/types/transaction.types'
+import { Rate } from '@/app/types/rate.type'
 
 import { cn } from '@/app/lib/utils'
 
-export function DataGrid({
-  data,
-  page,
-  onPageChange
-}: DataGridProps<Transaction>) {
+export function DataGrid({ data, page, onPageChange }: DataGridProps<Rate>) {
   const router = useRouter()
-  const { isLoading } = useAppContext()
 
-  const handleRowClick = (transactionId: number) => {
-    router.push(`/transactions/${transactionId}`)
+  const handleRowClick = (rateId: number) => {
+    router.push(`/rates/${rateId}`)
   }
 
   return (
@@ -45,10 +38,13 @@ export function DataGrid({
                 Type
               </TableHead>
               <TableHead className='w-[15%] text-center font-semibold text-gray-900'>
-                Amount
+                Rate
+              </TableHead>
+              <TableHead className='w-[45%] text-center font-semibold text-gray-900'>
+                Description
               </TableHead>
               <TableHead className='w-[15%] text-center font-semibold text-gray-900'>
-                Status
+                Active
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -56,34 +52,33 @@ export function DataGrid({
             {data.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={4}
+                  colSpan={5}
                   className='h-32 text-center text-gray-500'
                 >
-                  <p>No transactions found</p>
+                  <p>No rates found</p>
                 </TableCell>
               </TableRow>
             ) : (
-              data.map(transaction => (
+              data.map(rate => (
                 <TableRow
-                  key={transaction.id}
-                  onClick={() => handleRowClick(transaction.id)}
+                  key={rate.id}
+                  onClick={() => handleRowClick(rate.id)}
                   className='cursor-pointer text-center transition-colors hover:bg-gray-50'
                 >
                   <TableCell className='py-3 font-medium text-gray-900'>
-                    #{transaction.id}
+                    #{rate.id}
                   </TableCell>
                   <TableCell className='py-3 font-medium text-gray-900'>
-                    {transaction.type}
+                    {rate.type}
                   </TableCell>
                   <TableCell className='py-3 text-gray-600'>
-                    {transaction.calculatedFee && transaction.calculatedFee > 0
-                      ? (
-                        transaction.amount + transaction.calculatedFee
-                      ).toFixed(2)
-                      : transaction.amount.toFixed(2)}
+                    {(rate.rate * 100).toFixed(2)}%
                   </TableCell>
                   <TableCell className='py-3 text-gray-600'>
-                    {transaction.status}
+                    {rate.description}
+                  </TableCell>
+                  <TableCell className='py-3 text-gray-600'>
+                    {rate.active ? 'Yes' : 'No'}
                   </TableCell>
                 </TableRow>
               ))

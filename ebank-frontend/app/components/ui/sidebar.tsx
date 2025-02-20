@@ -50,9 +50,7 @@ export function Sidebar({
                   width={30}
                   height={30}
                   priority={true}
-                  className={cn(
-                    isDesktopCollapsed ? 'block' : 'hidden'
-                  )}
+                  className={cn(isDesktopCollapsed ? 'block' : 'hidden')}
                 />
                 {/* Desktop expanded logo */}
                 <Image
@@ -61,9 +59,7 @@ export function Sidebar({
                   width={120}
                   height={30}
                   priority={true}
-                  className={cn(
-                    isDesktopCollapsed ? 'hidden' : 'block'
-                  )}
+                  className={cn(isDesktopCollapsed ? 'hidden' : 'block')}
                 />
               </div>
             </Link>

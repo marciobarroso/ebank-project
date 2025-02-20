@@ -88,8 +88,8 @@ var dateFormat = (function () {
         Z: utc
           ? 'UTC'
           : (String(date).match(timezone) || [''])
-              .pop()
-              .replace(timezoneClip, ''),
+            .pop()
+            .replace(timezoneClip, ''),
         o:
           (o > 0 ? '-' : '+') +
           pad(Math.floor(Math.abs(o) / 60) * 100 + (Math.abs(o) % 60), 4),
@@ -116,8 +116,8 @@ dateFormat.masks = {
   longTime: 'h:MM:ss TT Z',
   isoDate: 'yyyy-mm-dd',
   isoTime: 'HH:MM:ss',
-  isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
-  isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
+  isoDateTime: 'yyyy-mm-dd\'T\'HH:MM:ss',
+  isoUtcDateTime: 'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\''
 }
 
 // Internationalization strings

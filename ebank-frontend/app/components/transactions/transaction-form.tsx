@@ -2,11 +2,23 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Input } from '@/app/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/components/ui/select'
-import { TransactionCreateSchema, TransactionCreateValues, TransactionType } from '@/app/types/transaction.types'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/app/components/ui/select'
+
+import {
+  TransactionCreateSchema,
+  TransactionCreateValues,
+  TransactionType
+} from '@/app/types/transaction.types'
 
 export type TransactionFormValues = z.infer<typeof TransactionCreateSchema>
 
@@ -20,7 +32,7 @@ export function TransactionForm({ onSubmit, isLoading }: TransactionFormProps) {
     resolver: zodResolver(TransactionCreateSchema),
     defaultValues: {
       type: TransactionType.DEPOSIT,
-      amount: 0,
+      amount: 0
     }
   })
 
@@ -28,13 +40,12 @@ export function TransactionForm({ onSubmit, isLoading }: TransactionFormProps) {
     try {
       await onSubmit(values)
       form.reset()
+      toast.success('Transaction created successfully')
     } catch (error) {
-      console.error('Form submission error:', error)
+      toast.error('Error creating transaction')
       throw error
     }
   }
-
-  console.log('Form render - isLoading:', isLoading)
 
   return (
     <form
@@ -47,15 +58,17 @@ export function TransactionForm({ onSubmit, isLoading }: TransactionFormProps) {
           Type
         </label>
         <Select
-          onValueChange={(value) => form.setValue('type', value as TransactionType)}
+          onValueChange={value =>
+            form.setValue('type', value as TransactionType)
+          }
           defaultValue={form.getValues('type')}
           disabled={isLoading}
         >
-          <SelectTrigger id="type" className="w-full">
-            <SelectValue placeholder="Select transaction type" />
+          <SelectTrigger id='type' className='w-full'>
+            <SelectValue placeholder='Select transaction type' />
           </SelectTrigger>
           <SelectContent>
-            {Object.values(TransactionType).map((type) => (
+            {Object.values(TransactionType).map(type => (
               <SelectItem key={type} value={type}>
                 {type}
               </SelectItem>
