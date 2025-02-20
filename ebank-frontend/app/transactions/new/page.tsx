@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-
 import { useRouter } from 'next/navigation'
 
 import { ArrowLeft, Loader2, Save } from 'lucide-react'
@@ -16,6 +14,8 @@ import { useTransaction } from '@/app/hooks/useTransactions'
 import { useAppContext } from '@/app/contexts/AppContext'
 
 import { TransactionType } from '@/app/types/transaction.types'
+
+import { apiErrorHandler } from '@/app/lib/api'
 
 interface TransactionFormValues {
   type: TransactionType
@@ -32,9 +32,10 @@ export default function NewTransactionPage() {
       await createTransaction(values)
       toast.success('Transaction created successfully')
       router.push('/transactions')
-    } catch (error) {
-      const errorMessage = JSON.parse(error?.request?.response).message
-      toast.error(errorMessage ? errorMessage : 'Failed to create transaction')
+    } catch (error: any) {
+      // Type error as any to access axios error properties
+      const message = apiErrorHandler(error)
+      toast.error(message)
     }
   }
 

@@ -34,7 +34,7 @@ public class RateEntity {
 	@Column(nullable = false)
 	private TransactionType type;
 	
-	@Column(nullable = false)
+	@Column(precision = 5, scale = 4, nullable = false)
 	private BigDecimal rate;
 
 	@Column(nullable = false)

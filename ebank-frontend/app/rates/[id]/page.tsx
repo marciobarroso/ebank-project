@@ -49,7 +49,7 @@ export default function RateViewPage() {
             min='0.01'
             max='999999999.99'
             placeholder='0.00'
-            value={`${(rate.rate * 100).toFixed(2)}\%`}
+            value={`${(rate.rate).toFixed(2)}\%`}
             disabled
             className='bg-gray-50'
           />

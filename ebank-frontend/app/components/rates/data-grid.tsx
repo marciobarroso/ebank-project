@@ -72,7 +72,7 @@ export function DataGrid({ data, page, onPageChange }: DataGridProps<Rate>) {
                     {rate.type}
                   </TableCell>
                   <TableCell className='py-3 text-gray-600'>
-                    {(rate.rate * 100).toFixed(2)}%
+                    {rate.rate.toFixed(2)}%
                   </TableCell>
                   <TableCell className='py-3 text-gray-600'>
                     {rate.description}

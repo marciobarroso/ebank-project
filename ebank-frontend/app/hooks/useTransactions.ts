@@ -64,10 +64,7 @@ export function useTransaction(id?: number) {
   const createTransaction = async (values: TransactionCreate) => {
     try {
       setIsLoading(true)
-      await apiTransactions.post(
-        '/api/v1/transactions',
-        values
-      )
+      await apiTransactions.post('/api/v1/transactions', values)
     } catch (error) {
       throw error
     } finally {

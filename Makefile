@@ -2,6 +2,15 @@
 BACKEND_DIR = ebank-backend
 FRONTEND_DIR = ebank-frontend
 
+DOCKER_IMAGE_NAME_TRANSACTION_SERVICE = ebank-transaction-service
+DOCKER_IMAGE_NAME_RATE_SERVICE = ebank-rate-service
+DOCKER_IMAGE_NAME_USER_SERVICE = ebank-user-service
+DOCKER_IMAGE_NAME_FRONTEND = ebank-frontend
+DOCKER_IMAGE_NAME_DATABASE = ebank-database
+
+DOCKER_VOLUME_NAME_DATABASE = ebank-database-volume
+DOCKER_VOLUME_NAME_LOG_FILES = ebank-logs-data
+
 # Colors for terminal output
 GREEN = \033[0;32m
 NC = \033[0m # No Color
@@ -26,7 +35,7 @@ build-frontend: ## Build the frontend project
 	@echo "${GREEN}Building frontend...${NC}"
 	@cd $(FRONTEND_DIR) && npm install && npm run build
 
-clean: clean-backend clean-frontend ## Clean both projects
+clean: clean-backend clean-frontend clean-docker ## Clean both projects
 
 clean-backend: ## Clean backend build files
 	@echo "${GREEN}Cleaning backend...${NC}"
@@ -35,6 +44,16 @@ clean-backend: ## Clean backend build files
 clean-frontend: ## Clean frontend build files
 	@echo "${GREEN}Cleaning frontend...${NC}"
 	@cd $(FRONTEND_DIR) && npm run clean
+
+clean-docker: ## Clean Docker images
+	@echo "${GREEN}Cleaning Docker images...${NC}"
+	@docker rmi $(DOCKER_IMAGE_NAME_TRANSACTION_SERVICE)
+	@docker rmi $(DOCKER_IMAGE_NAME_RATE_SERVICE)
+	@docker rmi $(DOCKER_IMAGE_NAME_USER_SERVICE)
+	@docker rmi $(DOCKER_IMAGE_NAME_FRONTEND)
+	@docker rmi $(DOCKER_IMAGE_NAME_DATABASE)
+	@docker volume rm $(DOCKER_VOLUME_NAME_DATABASE)
+	@docker volume rm $(DOCKER_VOLUME_NAME_LOG_FILES)
 
 docker-build: ## Build all Docker images
 	@echo "${GREEN}Building Docker images...${NC}"

@@ -82,7 +82,7 @@ export function RateForm({ onSubmit, isLoading }: RateFormProps) {
           type='number'
           step='0.0001'
           min='0.0001'
-          max='999999999.9999'
+          max='99999.9999'
           placeholder='0.0000'
           {...form.register('rate', { valueAsNumber: true })}
           disabled={isLoading}

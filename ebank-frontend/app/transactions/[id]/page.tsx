@@ -49,7 +49,7 @@ export default function TransactionViewPage() {
         description: fee.description || '',
         rate:
           typeof fee.rate === 'number'
-            ? `${(fee.rate * 100).toFixed(2)}%`
+            ? `${fee.rate.toFixed(2)}%`
             : fee.rate || '',
         calculatedAmount:
           typeof fee.calculatedAmount === 'number'

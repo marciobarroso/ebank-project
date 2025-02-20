@@ -85,7 +85,7 @@ public class TransactionService implements CreateTransactionUseCase, GetTransact
 			// Build calculation metadata
 			List<Map<String, Object>> rateDetails = applicableRates.stream()
 				.map(rate -> {
-					BigDecimal calculatedAmount = transaction.getAmount().multiply(rate.getRate());
+					BigDecimal calculatedAmount = transaction.getAmount().multiply(rate.getRate().divide(BigDecimal.valueOf(100)));
 					Map<String, Object> rateDetail = new HashMap<>();
 					rateDetail.put("rateId", rate.getId());
 					rateDetail.put("rate", rate.getRate());
@@ -108,7 +108,7 @@ public class TransactionService implements CreateTransactionUseCase, GetTransact
 				
 				// Calculate total fee using all applicable rates
 				BigDecimal totalFee = applicableRates.stream()
-					.map(rate -> transaction.getAmount().multiply(rate.getRate()))
+					.map(rate -> transaction.getAmount().multiply(rate.getRate().divide(BigDecimal.valueOf(100))))
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
 				
 				// Update transaction with calculated fee and metadata

@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-
 import { useRouter } from 'next/navigation'
 
 import { ArrowLeft, Loader2, Save } from 'lucide-react'
@@ -17,19 +15,22 @@ import { useAppContext } from '@/app/contexts/AppContext'
 
 import { RateCreateValues } from '@/app/types/rate.type'
 
+import { apiErrorHandler } from '@/app/lib/api'
+
 export default function NewRatePage() {
   const router = useRouter()
   const { isLoading } = useAppContext()
   const { createRate } = useRate()
-  
+
   const handleSubmit = async (values: RateCreateValues) => {
     try {
       await createRate(values)
       toast.success('Rate created successfully')
       router.push('/rates')
-    } catch (error) {
-      const errorMessage = JSON.parse(error?.request?.response).message
-      toast.error(errorMessage ? errorMessage : 'Failed to create rate')
+    } catch (error: any) {
+      // Type error as any to access axios error properties
+      const message = apiErrorHandler(error)
+      toast.error(message)
     }
   }
 

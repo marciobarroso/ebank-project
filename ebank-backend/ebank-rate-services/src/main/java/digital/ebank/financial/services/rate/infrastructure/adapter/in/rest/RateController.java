@@ -162,9 +162,9 @@ public class RateController {
         TransactionType type;
 
     	@Parameter(description = "Rate amount")
-        @NotNull(message = "Transaction rate is required")
-        @DecimalMin(value = "0.01", message = "Percentage rate must be at least 0.01%")
-        @Digits(integer = 3, fraction = 2, message = "Invalid format (max 3 digits and 2 decimal places)")
+        @NotNull(message = "Rate is required")
+        @DecimalMin(value = "0.0001", message = "Percentage rate must be at least 0.0001%")
+        @Digits(integer = 5, fraction = 4, message = "Invalid format (max 5 digits and 4 decimal places)")
         BigDecimal rate;
         
     	@Parameter(description = "Rate description")

@@ -6,19 +6,19 @@ INSERT INTO `rates`
     (`type`, `rate`, `description`, `active`, `created_at`) 
 VALUES 
     -- Deposit rates (0.5%, 1%, 1.5%)
-    ('DEPOSIT', 0.0050, 'Base deposit fee', true, NOW()),
-    ('DEPOSIT', 0.0100, 'Service deposit fee', true, NOW()),
-    ('DEPOSIT', 0.0150, 'Premium deposit fee', true, NOW()),
+    ('DEPOSIT', 0.5000, 'Base deposit fee', true, NOW()),
+    ('DEPOSIT', 1.0000, 'Service deposit fee', true, NOW()),
+    ('DEPOSIT', 1.5000, 'Premium deposit fee', true, NOW()),
     
     -- Withdrawal rates (1%, 1.5%, 2%)
-    ('WITHDRAWAL', 0.0100, 'Base withdrawal fee', true, NOW()),
-    ('WITHDRAWAL', 0.0150, 'Service withdrawal fee', true, NOW()),
-    ('WITHDRAWAL', 0.0200, 'Premium withdrawal fee', true, NOW()),
+    ('WITHDRAWAL', 1.0000, 'Base withdrawal fee', true, NOW()),
+    ('WITHDRAWAL', 1.5000, 'Service withdrawal fee', true, NOW()),
+    ('WITHDRAWAL', 2.0000, 'Premium withdrawal fee', true, NOW()),
     
     -- Transfer rates (1.5%, 2%, 2.5%)
-    ('TRANSFER', 0.0150, 'Base transfer fee', true, NOW()),
-    ('TRANSFER', 0.0200, 'Service transfer fee', true, NOW()),
-    ('TRANSFER', 0.0250, 'Premium transfer fee', true, NOW());
+    ('TRANSFER', 1.5000, 'Base transfer fee', true, NOW()),
+    ('TRANSFER', 2.0000, 'Service transfer fee', true, NOW()),
+    ('TRANSFER', 2.5000, 'Premium transfer fee', true, NOW());
 
 -- Initial data for Transaction Service
 USE `ebank-transaction-services-db`;

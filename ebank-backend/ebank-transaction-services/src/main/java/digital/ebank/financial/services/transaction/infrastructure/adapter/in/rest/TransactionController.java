@@ -111,7 +111,7 @@ public class TransactionController {
 		@NotNull(message = "Transaction amount is required")
 		@DecimalMin(value = "0.01", message = "The amount must be greater than zero")
 		@NumberFormat(style = Style.CURRENCY)
-		@Digits(integer = 10, fraction = 2, message = "Invalid amount format (max 10 integer digits and 2 decimal places)")
+		@Digits(integer = 19, fraction = 2, message = "Invalid amount format (max 19 integer digits and 2 decimal places)")
 		BigDecimal amount;
 	}
 
