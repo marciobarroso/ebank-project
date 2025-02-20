@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { toast } from 'sonner'
-
 import { useAppContext } from '@/app/contexts/AppContext'
 
 import { PageInfo } from '@/app/types/data-grid.types'
@@ -55,7 +53,7 @@ export function useTransaction(id?: number) {
         setTransactions(data.content)
         setPage(data.page)
       } catch (error) {
-        toast.error('Failed to load transactions')
+        throw error
       } finally {
         setIsLoading(false)
       }
@@ -66,17 +64,12 @@ export function useTransaction(id?: number) {
   const createTransaction = async (values: TransactionCreate) => {
     try {
       setIsLoading(true)
-      const response = await apiTransactions.post(
+      await apiTransactions.post(
         '/api/v1/transactions',
         values
       )
-      toast.success('Transaction created successfully')
-      return response.data
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to create transaction'
-      )
-      return false
+      throw error
     } finally {
       setIsLoading(false)
     }
@@ -89,7 +82,7 @@ export function useTransaction(id?: number) {
       const { data } = await apiTransactions.get(`/api/v1/transactions/${id}`)
       setTransaction(data)
     } catch (error) {
-      toast.error('Failed to load transaction')
+      throw error
     } finally {
       setIsLoading(false)
     }
@@ -99,10 +92,9 @@ export function useTransaction(id?: number) {
     try {
       setIsLoading(true)
       await apiTransactions.put(`/api/v1/transactions/${id}`, values)
-      toast.success('Transaction updated successfully')
       router.push(`/transactions/${id}`)
     } catch (error) {
-      toast.error('Failed to update transaction')
+      throw error
     } finally {
       setIsLoading(false)
     }
@@ -112,10 +104,9 @@ export function useTransaction(id?: number) {
     try {
       setIsLoading(true)
       await apiTransactions.delete(`/api/v1/transactions/${id}`)
-      toast.success('Transaction deleted successfully')
       router.push('/transactions')
     } catch (error) {
-      toast.error('Failed to delete transaction')
+      throw error
     } finally {
       setIsLoading(false)
     }

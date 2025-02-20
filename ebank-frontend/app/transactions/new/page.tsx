@@ -26,7 +26,6 @@ export default function NewTransactionPage() {
   const router = useRouter()
   const { isLoading } = useAppContext()
   const { createTransaction } = useTransaction()
-  const [error, setError] = useState('')
 
   const handleSubmit = async (values: TransactionFormValues) => {
     try {
@@ -34,8 +33,8 @@ export default function NewTransactionPage() {
       toast.success('Transaction created successfully')
       router.push('/transactions')
     } catch (error) {
-      toast.error('Failed to create transaction')
-      setError('Failed to create transaction')
+      const errorMessage = JSON.parse(error?.request?.response).message
+      toast.error(errorMessage ? errorMessage : 'Failed to create transaction')
     }
   }
 

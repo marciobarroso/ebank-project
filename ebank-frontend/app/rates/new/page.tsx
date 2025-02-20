@@ -21,16 +21,15 @@ export default function NewRatePage() {
   const router = useRouter()
   const { isLoading } = useAppContext()
   const { createRate } = useRate()
-  const [error, setError] = useState('')
-
+  
   const handleSubmit = async (values: RateCreateValues) => {
     try {
       await createRate(values)
       toast.success('Rate created successfully')
       router.push('/rates')
     } catch (error) {
-      toast.error('Failed to create rate')
-      setError('Failed to create rate')
+      const errorMessage = JSON.parse(error?.request?.response).message
+      toast.error(errorMessage ? errorMessage : 'Failed to create rate')
     }
   }
 

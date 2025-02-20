@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { toast } from 'sonner'
-
 import { useAppContext } from '@/app/contexts/AppContext'
 
 import { PageInfo } from '@/app/types/data-grid.types'
@@ -54,7 +52,7 @@ export function useRate(id?: number) {
         setRates(data.content)
         setPage(data.page)
       } catch (error) {
-        toast.error('Failed to load rates')
+        throw error
       } finally {
         setIsLoading(false)
       }
@@ -66,13 +64,8 @@ export function useRate(id?: number) {
     try {
       setIsLoading(true)
       await apiRates.post('/api/v1/rates', values)
-      toast.success('Rate created successfully')
-      return true
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to create rate'
-      )
-      return false
+      throw error
     } finally {
       setIsLoading(false)
     }
@@ -85,7 +78,7 @@ export function useRate(id?: number) {
       const { data } = await apiRates.get(`/api/v1/rates/${id}`)
       setRate(data)
     } catch (error) {
-      toast.error('Failed to load rate')
+      throw error
     } finally {
       setIsLoading(false)
     }

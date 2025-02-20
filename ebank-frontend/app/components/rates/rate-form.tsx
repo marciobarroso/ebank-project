@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Input } from '@/app/components/ui/input'
@@ -36,14 +35,7 @@ export function RateForm({ onSubmit, isLoading }: RateFormProps) {
   })
 
   const handleSubmit = async (values: RateFormValues) => {
-    try {
-      await onSubmit(values)
-      form.reset()
-      toast.success('Rate created successfully')
-    } catch (error) {
-      toast.error('Error creating rate')
-      throw error
-    }
+    await onSubmit(values)
   }
 
   return (
@@ -83,15 +75,15 @@ export function RateForm({ onSubmit, isLoading }: RateFormProps) {
 
       <div className='space-y-2'>
         <label htmlFor='rate' className='text-sm font-medium text-gray-700'>
-          Rate
+          Rate (%)
         </label>
         <Input
           id='rate'
           type='number'
-          step='0.01'
-          min='0.01'
-          max='999999999.99'
-          placeholder='0.00'
+          step='0.0001'
+          min='0.0001'
+          max='999999999.9999'
+          placeholder='0.0000'
           {...form.register('rate', { valueAsNumber: true })}
           disabled={isLoading}
         />

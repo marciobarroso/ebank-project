@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Input } from '@/app/components/ui/input'
@@ -37,14 +36,7 @@ export function TransactionForm({ onSubmit, isLoading }: TransactionFormProps) {
   })
 
   const handleSubmit = async (values: TransactionFormValues) => {
-    try {
-      await onSubmit(values)
-      form.reset()
-      toast.success('Transaction created successfully')
-    } catch (error) {
-      toast.error('Error creating transaction')
-      throw error
-    }
+    await onSubmit(values)
   }
 
   return (

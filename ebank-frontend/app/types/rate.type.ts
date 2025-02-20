@@ -21,8 +21,8 @@ export const RateSchema = z.object({
   type: z.nativeEnum(TransactionType),
   rate: z
     .number()
-    .positive('Amount must be greater than 0.01')
-    .multipleOf(0.01, 'Amount cannot have more than 2 decimal places'),
+    .positive('Amount must be greater than 0.0001')
+    .multipleOf(0.0001, 'Amount cannot have more than 4 decimal places'),
   description: z.string().optional(),
   active: z.boolean().optional(),
   createdAt: z.date()
