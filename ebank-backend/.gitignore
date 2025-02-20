@@ -50,7 +50,6 @@ bin/
 *.iml
 *.iws
 *.ipr
-out/
 
 # IDE - VS Code
 .vscode/

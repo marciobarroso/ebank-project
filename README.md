@@ -1,3 +1,5 @@
+![EasyBank Logo](ebank-backend/docs/images/logo-small.png)
+
 # E-Bank Financial Services
 
 A modern digital banking platform built to provide secure and efficient financial services through microservices architecture.
