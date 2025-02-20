@@ -37,7 +37,12 @@ make build
 make docker-up
 ```
 
-3. Access the services:
+3. If this is your first time running the application, you may need to wait a few moments for MySQL to initialize. You can check the logs with:
+```bash
+make docker-logs
+```
+
+4. Access the services:
 - Frontend: http://localhost:8080
 - User Service API: http://localhost:8081
 - Transaction Service API: http://localhost:8082

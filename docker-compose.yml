@@ -1,16 +1,14 @@
 services:
-  mysql:
+  ebank-database:
     container_name: ebank-database
-    image: mysql:8.3.0
+    build:
+      context: ./ebank-database
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ebank
     ports:
       - "3306:3306"
     volumes:
-      - ebank-mysql-data:/var/lib/mysql
-      - ./ebank-backend/mysql-init:/docker-entrypoint-initdb.d
-    command: --default-authentication-plugin=caching_sha2_password
+      - ebank-database-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
       interval: 10s
@@ -33,7 +31,7 @@ services:
     volumes:
       - ebank-logs-data:/app/logs
     depends_on:
-      mysql:
+      ebank-database:
         condition: service_healthy
     networks:
       ebank-network:
@@ -52,7 +50,7 @@ services:
     volumes:
       - ebank-logs-data:/app/logs
     depends_on:
-      mysql:
+      ebank-database:
         condition: service_healthy
       ebank-rate-services:
         condition: service_started
@@ -73,7 +71,7 @@ services:
     volumes:
       - ebank-logs-data:/app/logs
     depends_on:
-      mysql:
+      ebank-database:
         condition: service_healthy
     networks:
       ebank-network:
@@ -97,7 +95,7 @@ services:
       ebank-network:
 
 volumes:
-  ebank-mysql-data:
+  ebank-database-data:
     name: ebank-database-data
   ebank-logs-data:
     name: ebank-logs-data
