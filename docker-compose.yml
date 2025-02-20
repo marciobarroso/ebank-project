@@ -9,7 +9,7 @@ services:
       - "3306:3306"
     volumes:
       - ebank-mysql-data:/var/lib/mysql
-      - ./mysql-init:/docker-entrypoint-initdb.d
+      - ./ebank-backend/mysql-init:/docker-entrypoint-initdb.d
     command: --default-authentication-plugin=caching_sha2_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
@@ -19,10 +19,10 @@ services:
     networks:
       ebank-network:
 
-  user-service:
+  ebank-user-services:
     container_name: ebank-user-services
     build: 
-      context: ./ebank-user-services
+      context: ./ebank-backend/ebank-user-services
     ports:
       - "8081:8081"
     environment:
@@ -38,10 +38,10 @@ services:
     networks:
       ebank-network:
 
-  transaction-service:
+  ebank-transaction-services:
     container_name: ebank-transaction-services
     build: 
-      context: ./ebank-transaction-services
+      context: ./ebank-backend/ebank-transaction-services
     ports:
       - "8082:8082"
     environment:
@@ -54,15 +54,15 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      rate-service:
+      ebank-rate-services:
         condition: service_started
     networks:
       ebank-network:        
 
-  rate-service:
+  ebank-rate-services:
     container_name: ebank-rate-services
     build: 
-      context: ./ebank-rate-services
+      context: ./ebank-backend/ebank-rate-services
     ports:
       - "8083:8083"
     environment:
@@ -75,6 +75,24 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      ebank-network:
+
+  ebank-frontend:
+    container_name: ebank-frontend
+    build:
+      context: ./ebank-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_USER_SERVICE_URL=http://localhost:8081
+      - NEXT_PUBLIC_TRANSACTION_SERVICE_URL=http://localhost:8082
+      - NEXT_PUBLIC_RATE_SERVICE_URL=http://localhost:8083
+    depends_on:
+      - ebank-user-services
+      - ebank-transaction-services
+      - ebank-rate-services
     networks:
       ebank-network:
 

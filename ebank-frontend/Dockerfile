@@ -1,19 +1,28 @@
-# Base image
-FROM node:20-alpine
+# Build stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+ENV NEXT_PUBLIC_USER_SERVICE_URL=http://localhost:8081
+ENV NEXT_PUBLIC_TRANSACTION_SERVICE_URL=http://localhost:8082
+ENV NEXT_PUBLIC_RATE_SERVICE_URL=http://localhost:8083
+RUN npm run build
 
-# Set working directory
+# Production stage
+FROM node:20-alpine
 WORKDIR /app
 
-# Install dependencies first (caching)
-COPY package*.json ./
-COPY .npmrc ./
-RUN npm install
+# Copy built assets
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
 
-# Copy rest of the application
-COPY . .
-
-# Build the Next.js application
-RUN npm run build
+# Set runtime environment variables
+ENV NEXT_PUBLIC_USER_SERVICE_URL=http://localhost:8081
+ENV NEXT_PUBLIC_TRANSACTION_SERVICE_URL=http://localhost:8082
+ENV NEXT_PUBLIC_RATE_SERVICE_URL=http://localhost:8083
 
 # Expose port
 EXPOSE 8080

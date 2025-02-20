@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
-    "clean": "rimraf .next node_modules/.cache coverage dist",
+    "clean": "rimraf .next node_modules coverage dist",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -32,7 +32,6 @@
     "lucide-react": "^0.475.0",
     "next": "15.1.6",
     "react": "^19.0.0",
-    "react-day-picker": "8.10.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "sonner": "^1.7.4",
