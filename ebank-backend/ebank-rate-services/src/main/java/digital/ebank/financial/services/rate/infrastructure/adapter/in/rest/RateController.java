@@ -110,6 +110,7 @@ public class RateController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "rates retrieved successfully") })
 	public ResponseEntity<Page<RateResponse>> list(
 			@RequestParam(required = false) @Parameter(description = "Rate type filter") TransactionType type,
+			@RequestParam(required = false) @Parameter(description = "Rate description filter") String description,
 			@PageableDefault(size = 20, sort = "createdAt") 
 			@Parameter(description = "Pagination and sorting parameters", schema = @Schema(example = """
 					{
@@ -126,7 +127,7 @@ public class RateController {
 					}
 					""")) Pageable pageable) {
 
-		GetRateUseCase.GetAllRatesCommand command = new GetRateUseCase.GetAllRatesCommand(pageable, type);
+		GetRateUseCase.GetAllRatesCommand command = new GetRateUseCase.GetAllRatesCommand(pageable, type, description);
 		return ResponseEntity.ok(getRateUseCase.getAllRates(command).map(RateResponse::from));
 	}
     

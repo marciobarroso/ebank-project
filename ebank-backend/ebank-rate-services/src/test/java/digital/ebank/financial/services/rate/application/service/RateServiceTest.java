@@ -134,7 +134,7 @@ class RateServiceTest {
             when(rateRepository.findAll(pageable)).thenReturn(expectedPage);
             
             // Act
-            Page<Rate> resultPage = rateService.getAllRates(new GetAllRatesCommand(pageable, null));
+            Page<Rate> resultPage = rateService.getAllRates(new GetAllRatesCommand(pageable, null, null));
             
             // Assert
             assertNotNull(resultPage);

@@ -26,6 +26,7 @@ public interface GetRateUseCase {
     class GetAllRatesCommand {
         Pageable pageable;
         TransactionType type;
+        String description;
     }
     
     @Value

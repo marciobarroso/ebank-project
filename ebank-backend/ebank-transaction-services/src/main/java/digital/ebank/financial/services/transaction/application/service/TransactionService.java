@@ -57,7 +57,11 @@ public class TransactionService implements CreateTransactionUseCase, GetTransact
 
 	@Override
 	public Page<Transaction> getAllTransactions(GetAllTransactionsCommand command) {
-		return transactionRepository.findByType(command.getPageable(), command.getType());
+		if(command.getType() != null) {
+			return transactionRepository.findByType(command.getPageable(), command.getType());
+		} else {
+			return transactionRepository.findAll(command.getPageable());
+		}
 	}
 
 	@Override
